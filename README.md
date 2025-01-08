@@ -150,5 +150,5 @@ Cenário: Inclusão de cliente com sucesso
 
 Para dúvidas ou sugestões, entre em contato:
 - **Nome**: Gelson Santana de Oliveira Junior
-- **E-mail**: gelson.exemplo@dominio.com
+- **E-mail**: gelson.santana@hotmail.com
 - **Telefone**: +55 11 98384-5608
