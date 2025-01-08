@@ -2,12 +2,18 @@
 
 ## 📜 Descrição
 
-TesteRpeTech é um projeto de automação de testes criado para validar funcionalidades de um sistema web. Este projeto combina **Selenium**, **Cucumber**, e **Java** para implementar testes automatizados que verificam cenários críticos, como a inclusão de clientes, validação de vendas e comportamentos esperados do sistema.
+TesteRpeTech é um projeto de automação de testes desenvolvido para validar funcionalidades críticas de um sistema web. O projeto combina **Selenium**, **Cucumber**, e **Java**, oferecendo uma solução robusta para testes automatizados. 
 
-O projeto inclui:
+Este projeto foi estruturado para:
+- Validar a inclusão de clientes.
+- Verificar o fluxo de autenticação de usuários.
+- Garantir que os comportamentos esperados do sistema sejam atendidos.
+
+**Destaques do projeto:**
 - Captura de screenshots em caso de falhas.
 - Geração de relatórios detalhados com **ExtentReports**.
-- Utilização do padrão BDD para alinhar os testes com os critérios de aceitação.
+- Utilização do padrão BDD, promovendo alinhamento com critérios de aceitação.
+- Configurações dinâmicas via arquivo `config.properties`.
 
 ---
 
@@ -28,16 +34,26 @@ O projeto inclui:
 
 ### Diretórios Principais
 
-- **`src/test/java`**: Contém as classes de testes, steps do Cucumber e configurações do projeto.
-  - **`steps`**: Implementação dos passos definidos nos cenários do Cucumber.
-  - **`utils`**: Métodos utilitários como gerenciamento do WebDriver e configuração de relatórios.
-  - **`config`**: Classes responsáveis por gerenciar as configurações do projeto.
+- **`src/test/java`**: Contém as classes de testes, steps do Cucumber e configurações gerais.
+  - **`steps`**: Implementação dos passos dos cenários em BDD.
+    - `LoginSteps.java`: Validações relacionadas ao login.
+    - `ClienteSteps.java`: Passos para inclusão e validação de clientes.
+    - `Hooks.java`: Configurações executadas antes e depois de cada cenário.
+  - **`utils`**: Módulos auxiliares.
+    - `DriverManager.java`: Gerenciamento dos drivers dos navegadores.
+    - `WaitUtils.java`: Métodos para aplicação de esperas dinâmicas.
+    - `ConfigExtentReport.java`: Configuração do relatório ExtentReports.
+  - **`config`**: Classes para gerenciamento de configurações.
+    - `ConfigReader.java`: Leitura de parâmetros dinâmicos do arquivo `config.properties`.
 
-- **`src/test/resources`**: Contém arquivos de suporte, como:
+- **`src/test/resources`**: Contém arquivos de suporte.
   - **`features`**: Arquivos `.feature` escritos em Gherkin.
-  - **`config.properties`**: Arquivo de configuração contendo propriedades do projeto (e.g., URLs, tempo de espera).
+    - `Login.feature`: Cenários de autenticação de usuários.
+    - `Cliente.feature`: Cenários de inclusão de clientes.
+  - **`config.properties`**: Propriedades configuráveis, como URLs e opções de navegador.
 
-- **`screenshots`**: Diretório criado dinamicamente para armazenar screenshots de cenários falhos.
+- **`screenshots`**: Diretório gerado dinamicamente para armazenar imagens de falhas.
+- **`reports`**: Local onde os relatórios de execução são armazenados.
 
 ---
 
@@ -46,10 +62,10 @@ O projeto inclui:
 ### Pré-requisitos
 
 1. **Java JDK**: Certifique-se de ter o JDK 8 ou superior instalado.
-2. **Maven**: Instale o Apache Maven para gerenciamento de dependências.
-3. **IDE**: Utilize uma IDE como IntelliJ IDEA ou Eclipse.
-4. **Navegadores**: Instale Chrome e/ou Edge.
-5. **Drivers**: Não é necessário baixar manualmente os drivers (WebDriverManager gerencia isso automaticamente).
+2. **Maven**: Instale o Apache Maven.
+3. **IDE**: Recomenda-se IntelliJ IDEA ou Eclipse.
+4. **Navegadores**: Chrome, Edge ou Firefox.
+5. **Drivers**: Gerenciados automaticamente pelo WebDriverManager.
 
 ### Configurando o Projeto
 
@@ -60,16 +76,16 @@ O projeto inclui:
    ```
 
 2. **Configure o arquivo `config.properties`**:
-   Edite o arquivo localizado em `src/test/resources/config.properties` e configure as propriedades do projeto:
+   Edite o arquivo localizado em `src/test/resources/config.properties` e defina os valores adequados:
    ```properties
    base.url=http://seu-endereco-base
    browser=chrome
    explicit.timeout=15
    username=Seu-Usuario
    password=Sua-Senha
-   headless=True ou False
-   environment=Seu-Ambiente
-   author=Quem esta executando os testes
+   headless=true
+   environment=dev
+   author=Seu-Nome
    ```
 
 3. **Atualize as dependências do Maven**:
@@ -83,8 +99,8 @@ O projeto inclui:
 
 ### Via IDE
 
-1. Abra o projeto na sua IDE preferida.
-2. Execute as classes de teste ou cenários do Cucumber utilizando as opções `Run`.
+1. Abra o projeto em sua IDE.
+2. Execute os testes diretamente pela classe `TestRunner.java`.
 
 ### Via Terminal
 
@@ -93,91 +109,46 @@ O projeto inclui:
    mvn test
    ```
 
-2. Execute testes específicos utilizando tags:
+2. Execute testes específicos com tags:
    ```bash
    mvn test -Dcucumber.filter.tags="@Regressivo"
    ```
 
 ---
 
-## 📝 Estrutura dos Cenários (BDD)
-
-Os cenários são escritos no formato Gherkin, que facilita a leitura por equipes técnicas e de negócio. Exemplo:
-
-```gherkin
-Esquema do Cenário: Inclusão de cliente com sucesso preenchendo todos os campos obrigatórios
-  Dado que o sistema está disponível
-  E o usuário acessa a funcionalidade de Incluir Cliente
-  Quando o usuário preenche os campos
-    | Nome             | <Nome>       |
-    | CPF              | <CPF>        |
-    | Status           | <Status>     |
-    | Saldo Disponivel | <Saldo>      |
-  E confirma o cadastro
-  Então o sistema deve exibir a mensagem "Cliente salvo com sucesso"
-
-  Exemplos:
-    | Nome           | CPF            | Status | Saldo  |
-    | Marcos Silva   | 123.456.789-00 | Ativo  | 150.00 |
-    | Maria Silva    | 123.456.789-01 | Inativo| 100.00 |
-```
-
----
-
-## 🖼️ Captura de Screenshots
-
-Em caso de falhas, as screenshots são salvas automaticamente na pasta `screenshots` e anexadas ao relatório **ExtentReports**.
-
-### Exemplo de Caminho de Screenshot
-```
-screenshots/NOME_DO_TESTE_TIMESTAMP.png
-```
-
----
-
 ## 📊 Relatórios
 
-Os relatórios gerados incluem:
-- **Status de Testes**: Sucesso ou falha.
-- **Captura de Evidências**: Imagens de cenários falhos.
-- **Detalhes**: Passos executados, tempo de execução e mensagens.
+Os relatórios são gerados com o **ExtentReports**, oferecendo:
+- Status dos testes (sucesso, falha, ignorado).
+- Evidências visuais com screenshots de erros.
+- Detalhes dos passos executados e tempo de duração.
 
-Os relatórios podem ser acessados em:
+### Localização
+
+Os relatórios podem ser encontrados na pasta:
 ```
-reports
+reports/Relatorio-de-testes.html
 ```
 
 ---
 
-## 🛠️ Problemas Comuns
+## 📝 Estrutura dos Cenários (BDD)
 
-### 1. Testes falham ao capturar screenshots
-- Certifique-se de que a pasta `screenshots` possui permissões de escrita.
+Os cenários são descritos em Gherkin para facilitar o entendimento por todas as partes envolvidas. Exemplo:
 
-### 2. Relatórios não são gerados
-- Verifique se o método `ConfigExtentReport.flushReport()` está sendo chamado no `@AfterAll`.
-
----
-
-## 🌟 Contribuindo
-
-1. **Faça um fork**:
-   ```bash
-   git fork <URL_DO_REPOSITORIO>
-   ```
-
-2. **Crie uma branch**:
-   ```bash
-   git checkout -b feature/nova-funcionalidade
-   ```
-
-3. **Faça as alterações e envie um PR**.
+```gherkin
+Cenário: Inclusão de cliente com sucesso
+  Dado que o usuário acessa a tela de inclusão de clientes
+  Quando ele preenche os campos obrigatórios corretamente
+  E confirma o cadastro
+  Então o sistema exibe a mensagem "Cliente salvo com sucesso"
+```
 
 ---
 
-## 📞 Contato
+## 🌐 Contato
 
-Caso tenha dúvidas ou sugestões, entre em contato comigo +5511983845608.
-
----
-
+Para dúvidas ou sugestões, entre em contato:
+- **Nome**: Gelson Santana de Oliveira Junior
+- **E-mail**: gelson.exemplo@dominio.com
+- **Telefone**: +55 11 98384-5608
